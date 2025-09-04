@@ -1,0 +1,20 @@
+{
+  "history": [
+    "User: hi",
+    "Bot: Hi there!  How can I help you today?",
+    "User: my name is shivansh randi",
+    "Bot: Hi Shivansh Randi!  Is there anything I can help you with today?",
+    "User: i am feeling depressed",
+    "Bot: Hi Shivansh Randi, I'm sorry to hear you're feeling depressed. That sounds really tough.  Is there anything specific you'd like to talk about, or would you like me to share some resources that might help?",
+    "User: take anxiety test",
+    "Bot: Generalized Anxiety Disorder 7-item (GAD-7) Assessment\n\nOver the last 2 weeks, how often have you been bothered by the following problems? Please answer with a number from 0 to 3.\n(0) Not at all\n(1) Several days\n(2) More than half the days\n(3) Nearly every day\n\nQuestion:\n1. Feeling nervous, anxious, or on edge",
+    "User: hi",
+    "Bot: Please provide a valid number from the options (e.g., 0, 1, 2, or 3)."
+  ],
+  "test_state": {
+    "active": true,
+    "test_name": "gad7",
+    "current_question": 0,
+    "answers": []
+  }
+}

@@ -13,6 +13,11 @@ Each topic is documented separately with causes, symptoms, coping strategies, an
  -[stress management](knowledge_base/06_stress_management.md)
  -[college support information](knowledge_base/03_college_support_info.md)
  -[emergency info](knowledge_base/07_emergency.md)
+ -[digital wellbeing](knowledge_base/08_digital_wellbeing.md)
+ -[peer relationships loneliness](knowledge_base/09_peer_relationships_loneliness)
+ -[time management procastination](knowledge_base/10_time_management_procrastrination.md)
+ -[sleep hygine](knowledge_base/11_sleep_hygiene.md)
+ 
 ---
 
 ## ⚠️ Emergency Resources (India)

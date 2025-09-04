@@ -1,0 +1,170 @@
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* --- General Styles & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #1A1D1A; /* Dark background for the page */
+    color: #F0F0F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Chat Container --- */
+.chat-container {
+    width: 100%;
+    max-width: 420px; /* Optimal width for a chat window */
+    height: 90vh;
+    max-height: 750px;
+    background-color: #2E332A; /* Main container background */
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- Chat Header --- */
+.chat-header {
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3a4035; /* Subtle separator */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.logo img {
+    width: 24px;
+    height: 24px;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-pill {
+    width: 70px;
+    height: 28px;
+    background-color: #fff;
+    border-radius: 50px;
+}
+
+.header-circle {
+    width: 28px;
+    height: 28px;
+    background-color: #fff;
+    border-radius: 50%;
+}
+
+/* --- Chat Box (Message Area) --- */
+.chat-box {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Custom scrollbar for a cleaner look */
+.chat-box::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-box::-webkit-scrollbar-thumb {
+    background: #5F6753;
+    border-radius: 3px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.5;
+}
+
+.bot-message {
+    background-color: #3a4035;
+    align-self: flex-start;
+    border-top-left-radius: 4px;
+}
+
+.user-message {
+    background-color: #5F6753;
+    align-self: flex-end;
+    color: #fff;
+    border-top-right-radius: 4px;
+}
+
+
+/* --- Chat Input Area --- */
+.chat-input-wrapper {
+    padding: 15px 25px;
+    position: relative;
+}
+
+#user-input {
+    width: 100%;
+    height: 50px;
+    background-color: #5F6753; /* Olive green input background */
+    border: none;
+    border-radius: 50px; /* Pill shape */
+    padding-left: 60px; /* Space for the icon */
+    padding-right: 20px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+#user-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#user-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 35px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-icon img {
+    width: 18px;
+    height: 18px;
+}
+
+/* Hide the original button, as the design doesn't show it */
+#send-btn {
+    display: none;
+}
