@@ -1,0 +1,14 @@
+{
+  "history": [
+    "User: hi",
+    "Bot: It sounds like you're reaching out.  What's on your mind?  I'm here to listen without judgment.",
+    "User: i am sad",
+    "Bot: That's okay.  It's perfectly alright to feel sad.  Tell me more about it if you feel comfortable.  Sometimes just talking about it can help.  Or, if you don't want to talk, that's fine too.  We can just sit here with the silence for a bit.  What feels best for you right now?"
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

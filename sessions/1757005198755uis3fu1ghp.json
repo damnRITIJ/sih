@@ -1,0 +1,12 @@
+{
+  "history": [
+    "User: hi",
+    "Bot: Hi there! How can I help you today?"
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

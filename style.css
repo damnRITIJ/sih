@@ -8,29 +8,29 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #1A1D1A; /* Dark background for the page */
+    background-color: #1A1D1A;
     color: #F0F0F0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    /* We no longer need flexbox to center the container */
 }
+
 
 /* --- Chat Container --- */
 .chat-container {
-    width: 100%;
-    max-width: 420px; /* Optimal width for a chat window */
-    height: 90vh;
-    max-height: 750px;
-    background-color: #2E332A; /* Main container background */
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;             /* Fills the full width */
+    height: 100vh;           /* Fills the full viewport height */
+    max-width: 100%;         /* Removes the width limit */
+    max-height: 100vh;       /* Removes the height limit */
+    background-color: #2E332A;
+    border-radius: 0;        /* No rounded corners for full screen */
+    box-shadow: none;        /* No shadow needed */
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
+
 
 /* --- Chat Header --- */
 .chat-header {
@@ -60,19 +60,23 @@ body {
     gap: 10px;
 }
 
-.header-pill {
-    width: 70px;
-    height: 28px;
-    background-color: #fff;
-    border-radius: 50px;
+.signin-btn {
+    padding: 8px 16px;
+    border: 1px solid #5F6753;
+    background-color: transparent;
+    color: #F0F0F0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.header-circle {
-    width: 28px;
-    height: 28px;
-    background-color: #fff;
-    border-radius: 50%;
+.signin-btn:hover {
+    background-color: #5F6753;
+    color: white;
 }
+
 
 /* --- Chat Box (Message Area) --- */
 .chat-box {
@@ -82,6 +86,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    
+    /* NEW: Add a max-width and center the chat column */
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto; /* This centers the chat column */
 }
 
 /* Custom scrollbar for a cleaner look */

@@ -1,0 +1,14 @@
+{
+  "history": [
+    "User: hello",
+    "Bot: It sounds like you're reaching out.  That takes courage, and I'm here to listen without judgment. What's on your mind?",
+    "User: hi",
+    "Bot: It's great you're reaching out again.  Tell me what's happening.  I'm here to listen."
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

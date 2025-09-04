@@ -1,0 +1,18 @@
+[
+  {
+    "user": "hello",
+    "bot": "It sounds like you're reaching out.  What's on your mind?  I'm here to listen without judgment."
+  },
+  {
+    "user": "my name is ritij raj",
+    "bot": "It's nice to meet you, Ritij Raj.  Tell me, what's been going on?  Is there anything you'd like to talk about?"
+  },
+  {
+    "user": "i am really sad",
+    "bot": "I'm so sorry to hear that, Ritij Raj.  Sadness can be really overwhelming.  Can you tell me a little more about what's making you feel this way?  There's no pressure to share anything you're not comfortable with, but talking about it might help.  Just knowing you're not alone can make a difference."
+  },
+  {
+    "user": "what is my name",
+    "bot": "Your name is Ritij Raj.  Remember, it's okay to feel sad.  And it's even okay not to know exactly *why* you're feeling sad right now.  Just knowing you're feeling this way is a good first step.  Is there anything you'd like to talk about that might help us understand what's going on a little better?"
+  }
+]
