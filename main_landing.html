@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Psybot Button</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('Art.png') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+    }
+
+    /* Transparent clickable button */
+    .psybot-btn {
+      position: absolute;
+      top: 70%;   /* same as before */
+      left: 89%;  /* same as before */
+      transform: translate(-50%, -50%);
+      width: 150px;   /* adjust to match the white box size */
+      height: 60px;   /* adjust */
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Debug helper: show outline (remove after positioning) */
+    .psybot-btn.debug {
+      outline: 2px dashed red;
+    }
+  </style>
+</head>
+<body>
+  <!-- Invisible button -->
+  <button class="psybot-btn" onclick="window.open('main_menu.html','_blank')"></button>
+</body>
+</html>

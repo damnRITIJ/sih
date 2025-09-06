@@ -1,10 +1,12 @@
 import os
 import json
+from typing import List, Optional # <-- Added for type hinting
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
+# Assuming you have this file from our previous steps
 from screening_tools import get_test
 
 load_dotenv()
@@ -24,22 +26,22 @@ embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 vectordb = Chroma(persist_directory='db', embedding_function=embeddings)
 retriever = vectordb.as_retriever(search_type="mmr", search_kwargs={'k': 4, 'fetch_k': 20})
 
-# --- RAG Chain Prompt ---
-template = """
-You are 'Dost', a warm, empathetic, and friendly wellness companion for college students. Your persona is like a supportive friend who is a good listener.
-**CRITICAL INSTRUCTION: NEVER start your reply with "Hi," "Hello," "Hey," or any similar greeting. Jump directly into your supportive response.**
-Use the provided "Knowledge Base Context" only if it is relevant to the user's latest message.
+# --- Anonymous Chat Logic ---
+ANONYMOUS_PROMPT_TEMPLATE = """
+You are 'Dost', a warm and friendly wellness companion for college students.
+CRITICAL INSTRUCTION: NEVER start your reply with "Hi," "Hello," or any greeting. Jump directly into your supportive response.
+Use the provided CONTEXT from your knowledge base to answer the user's QUESTION. The QUESTION may include past conversation history for context.
 
-**Knowledge Base Context:**
+CONTEXT:
 {context}
 
-**Ongoing Conversation:**
+QUESTION:
 {question}
 
-**Dost's Reply:**
+Dost's Empathetic Reply:
 """
-QA_CHAIN_PROMPT = PromptTemplate.from_template(template)
-qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever, chain_type_kwargs={"prompt": QA_CHAIN_PROMPT})
+ANONYMOUS_PROMPT = PromptTemplate.from_template(ANONYMOUS_PROMPT_TEMPLATE)
+anonymous_qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever, chain_type_kwargs={"prompt": ANONYMOUS_PROMPT})
 
 # --- Session and History Helper Functions ---
 def save_session(session_id, data):
@@ -53,19 +55,17 @@ def load_session(session_id):
             return json.load(f)
     return {"history": [], "test_state": {"active": False, "test_name": None, "current_question": 0, "answers": []}}
 
-# --- MODIFIED: Helper functions for consultancy chat logs with filename sanitization ---
+def _sanitize_user_id(user_id: str) -> str:
+    return user_id.replace('/', '_').replace('\\', '_')
+
 def save_chat_history(user_id, history):
-    """Saves persistent chat history for a signed-in user."""
-    # Sanitize the user_id to make it a valid filename by replacing slashes
-    sanitized_user_id = user_id.replace("/", "_")
+    sanitized_user_id = _sanitize_user_id(user_id)
     filepath = os.path.join(CHAT_LOGS_DIR, f"{sanitized_user_id}.json")
     with open(filepath, 'w') as f:
         json.dump(history, f, indent=2)
 
 def load_chat_history(user_id):
-    """Loads persistent chat history for a signed-in user."""
-    # Sanitize the user_id to find the correct file
-    sanitized_user_id = user_id.replace("/", "_")
+    sanitized_user_id = _sanitize_user_id(user_id)
     filepath = os.path.join(CHAT_LOGS_DIR, f"{sanitized_user_id}.json")
     if os.path.exists(filepath):
         with open(filepath, 'r') as f:
@@ -79,7 +79,7 @@ def start_test(session_state, test_name: str) -> str:
         return "I'm sorry, I don't have that test available."
     state = session_state["test_state"]
     state["active"], state["test_name"], state["current_question"], state["answers"] = True, test_name, 0, []
-    options_str = "\n".join(test["options"])
+    options_str = "\n".join([f"{idx}. {opt}" for idx, opt in enumerate(test["options"])])
     return f"{test['title']}\n\n{test['instructions']}\n{options_str}\n\nQuestion:\n{test['questions'][0]}"
 
 def handle_test_response(session_state, user_answer: str) -> str:
@@ -122,7 +122,7 @@ def handle_anonymous_chat(user_message: str, session_id: str) -> str:
         bot_reply = start_test(session, "phq9")
     else:
         conversation_transcript = "\n".join(history) + f"\nUser: {user_message}"
-        result = qa_chain.invoke({"query": conversation_transcript})
+        result = anonymous_qa_chain.invoke({"query": conversation_transcript})
         bot_reply = result['result']
     
     history.append(f"User: {user_message}")
@@ -130,20 +130,57 @@ def handle_anonymous_chat(user_message: str, session_id: str) -> str:
     save_session(session_id, session)
     return bot_reply
 
-# --- Handler for Consultancy Chat ---
-def handle_consultancy_chat(user_message: str, user_id: str) -> str:
-    """Handles chats for signed-in users with persistent memory."""
+# --- Consultancy Chat Logic (with Journal Integration) ---
+# --- MODIFIED: Simplified prompt to work with the chain ---
+CONSULTANCY_PROMPT_TEMPLATE = """
+You are 'Dost', an empathetic wellness companion continuing a conversation with a user.
+CRITICAL INSTRUCTION: NEVER start your reply with a greeting. Jump directly into your supportive response.
+
+Use the following information to inform your reply:
+1.  **Knowledge Base Context:** General information to answer specific questions.
+2.  **User's Full Context (below):** This includes their chat history, recent journal entries, and their latest message. Use this to understand their feelings and patterns. Refer to journal entries gently and indirectly.
+
+**Knowledge Base Context:**
+{context}
+
+**User's Full Context:**
+{question}
+
+**Dost's Empathetic Reply:**
+"""
+CONSULTANCY_PROMPT = PromptTemplate.from_template(CONSULTANCY_PROMPT_TEMPLATE)
+consultancy_qa_chain = RetrievalQA.from_chain_type(
+    llm,
+    retriever=retriever,
+    chain_type_kwargs={"prompt": CONSULTANCY_PROMPT}
+)
+
+# --- MODIFIED: This function now combines all context into a single input ---
+def handle_consultancy_chat(user_message: str, user_id: str, journal_entries: Optional[List[str]] = None) -> str:
     history = load_chat_history(user_id)
     
-    # Format the history from a list of dicts into a string for the prompt
-    conversation_transcript = "\n".join([f"User: {turn['user']}\nBot: {turn['bot']}" for turn in history])
-    conversation_transcript += f"\nUser: {user_message}"
+    # Build the full context string to pass to the chain
+    full_context = ""
 
-    # Use the same RAG chain for a consistent personality
-    result = qa_chain.invoke({"query": conversation_transcript})
+    # Add the chat history
+    full_context += "--- Start of Conversation History ---\n"
+    full_context += "\n".join([f"User: {turn['user']}\nBot: {turn['bot']}" for turn in history])
+    full_context += "\n--- End of Conversation History ---\n\n"
+
+    # Add the journal entries if they exist
+    if journal_entries:
+        full_context += "--- Start of Recent Journal Entries ---\n"
+        full_context += "- " + "\n- ".join(journal_entries)
+        full_context += "\n--- End of Recent Journal Entries ---\n\n"
+
+    # Add the user's latest message
+    full_context += f"--- User's Latest Message ---\n{user_message}"
+
+    # Invoke the chain with the single, combined context
+    result = consultancy_qa_chain.invoke({"query": full_context})
     bot_reply = result['result']
     
-    # Save the new turn as a dictionary for structured logging
+    # Save history as before
     history.append({"user": user_message, "bot": bot_reply})
     save_chat_history(user_id, history)
     

@@ -1,0 +1,38 @@
+{
+  "history": [
+    "User: i am feeling sucidal",
+    "Bot: Oh my gosh, I'm so incredibly sorry to hear that.  That sounds incredibly difficult, and I want you to know you're not alone.  Please know that reaching out is a huge step, and it takes a lot of courage to share this.  It\u2019s okay to not be okay.  Is there anything at all you'd like to talk about right now?  Even if it's just something small, it might help to get it off your chest.  Or, if you'd rather just sit in silence for a bit, that's okay too.  I'm here to listen without judgment.  Most importantly, please know that there are people who want to help, and you don't have to go through this by yourself.  Would you like me to help you find some resources that can provide immediate support?",
+    "User: take anxiety test",
+    "Bot: Generalized Anxiety Disorder 7-item (GAD-7) Assessment\n\nOver the last 2 weeks, how often have you been bothered by the following problems? Please answer with a number from 0 to 3.\n(0) Not at all\n(1) Several days\n(2) More than half the days\n(3) Nearly every day\n\nQuestion:\n1. Feeling nervous, anxious, or on edge",
+    "User: 3",
+    "Bot: Question:\n2. Not being able to stop or control worrying",
+    "User: 3",
+    "Bot: Question:\n3. Worrying too much about different things",
+    "User: 3",
+    "Bot: Question:\n4. Trouble relaxing",
+    "User: 3",
+    "Bot: Question:\n5. Being so restless that it is hard to sit still",
+    "User: 3",
+    "Bot: Question:\n6. Becoming easily annoyed or irritable",
+    "User: 3",
+    "Bot: Question:\n7. Feeling afraid as if something awful might happen",
+    "User: 3",
+    "Bot: Thank you for completing the assessment.\n\nYour total score is: 21.\n\n**Interpretation:** Severe anxiety. The score suggests you are experiencing significant anxiety. Please consider seeking professional support soon. You can find emergency resources in the 'Help' section.\n\nRemember, this is not a diagnosis. How can I help you further?",
+    "User: ok",
+    "Bot: Okay.  That's a brave step, acknowledging what you're going through.  Even a simple \"ok\" can mean a lot.  Is there anything else you'd like to talk about?  Or perhaps you'd like me to help you find some resources, like a therapist or a helpline?  Remember, you don't have to go through this alone.  I'm here to listen whenever you need."
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": "gad7",
+    "current_question": 7,
+    "answers": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ]
+  }
+}

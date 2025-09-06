@@ -1,0 +1,16 @@
+{
+  "history": [
+    "User: hello",
+    "Bot: It's great to connect with you!  How can I help you today?",
+    "User: hi",
+    "Bot: It's wonderful to hear from you again! What's on your mind today?  Is there anything I can help you with?",
+    "User: hi",
+    "Bot: It's lovely to hear from you! What's been on your mind lately?  Is there anything you'd like to talk about or any way I can support you today?"
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

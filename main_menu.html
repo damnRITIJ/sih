@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Layout</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
+    .container {
+      position: relative;
+      width: 1366px; /* same as main0.png */
+      height: auto;
+    }
+
+    .main-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Navigation bar inside top white box */
+    .navbar {
+      position: absolute;
+      top: 44px;    /* adjust to fit inside white box */
+      left: 50%;
+      transform: translateX(-50%);
+      background: transparent;
+      display: flex;
+      gap: 14px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #2f3e1c; /* dark green shade like text in boxes */
+      transition: 0.3s;
+    }
+
+    .navbar a:hover {
+      color: #6a8f4e; /* lighter hover green */
+    }
+
+    area {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Background -->
+    <img src="main0.png" usemap="#boxmap" class="main-img">
+
+    <!-- Navigation bar -->
+    <div class="navbar">
+      <a href="home.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+    </div>
+
+    <!-- Clickable areas for boxes -->
+    <map name="boxmap">
+      <!-- coords need adjusting to exact box positions -->
+      <area shape="rect" coords="200,220,400,420" href="journal.html" alt="Journal">
+      <area shape="rect" coords="450,220,850,420" href="index.html" alt="Psybot">
+      <area shape="rect" coords="900,220,1100,420" href="psymate.html" alt="Psymate">
+      <area shape="rect" coords="200,450,400,650" href="resourcehub.html" alt="Resource Hub">
+      <area shape="rect" coords="450,450,650,650" href="forum.html" alt="Forum">
+      <area shape="rect" coords="700,450,1100,650" href="appointment.html" alt="Appointment">
+    </map>
+  </div>
+</body>
+</html>

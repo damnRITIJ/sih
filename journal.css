@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    color: #1A1D1A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* --- Main Journal Container --- */
+.journal-container {
+    width: 100%;
+    max-width: 1200px; /* Increased width for side-by-side layout */
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Changed for better vertical alignment */
+    margin-bottom: 20px;
+}
+
+.journal-title {
+    font-family: 'Staatliches', cursive;
+    font-size: 5rem;
+    color: #000;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #5F6753;
+    font-weight: bold;
+}
+
+/* --- The Main Green Content Area --- */
+.journal-content {
+    background-color: #3E4A34;
+    color: #F0F0F0;
+    border-radius: 25px;
+    padding: 30px;
+    flex-grow: 1;
+    overflow: hidden; /* Prevent children from overflowing the rounded corners */
+    
+    /* --- NEW: This creates the two-column layout --- */
+    display: flex;
+    gap: 30px; /* Adds space between the two columns */
+}
+
+/* --- New Entry Section (Left Column) --- */
+.new-entry-section {
+    flex: 1; /* Takes up 1 part of the space */
+    display: flex;
+    flex-direction: column;
+}
+
+#new-entry-textarea {
+    width: 100%;
+    flex-grow: 1; /* Makes the textarea fill the available vertical space */
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    resize: none; /* Disable manual resizing */
+}
+
+#new-entry-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+
+#save-entry-btn {
+    display: block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #5F6753;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#save-entry-btn:hover {
+    background-color: #7a856b;
+}
+
+/* --- Past Entries Section (Right Column) --- */
+.past-entries-section {
+    flex: 1.5; /* Takes up 1.5 parts of the space, making it wider */
+    display: flex;
+    flex-direction: column;
+}
+
+.past-entries-section h2 {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    flex-shrink: 0; /* Prevents the header from shrinking */
+}
+
+#past-entries-list {
+    overflow-y: auto; /* Enable scrolling ONLY for the list of entries */
+}
+
+/* Custom scrollbar for a cleaner look */
+#past-entries-list::-webkit-scrollbar {
+    width: 8px;
+}
+#past-entries-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#past-entries-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+
+.entry {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ff8a80;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* --- Locked View --- */
+.locked-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    z-index: 1000;
+}
+
+.locked-content {
+    background-color: #2E332A;
+    padding: 40px;
+    border-radius: 15px;
+}
+
+.locked-content a {
+    color: #4A90E2;
+}

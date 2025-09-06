@@ -32,12 +32,11 @@ def read_root():
 
 
 
-# main.py
 from fastapi import FastAPI
 from pydantic import BaseModel
-# --- MODIFIED: Import both handler functions ---
+from typing import List, Optional # <-- Add List and Optional
+# Make sure the filename and function names are correct
 from anonymous import handle_anonymous_chat, handle_consultancy_chat 
-
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -60,10 +59,11 @@ class AnonymousChatRequest(BaseModel):
     message: str
     session_id: str
 
-# --- NEW: Pydantic model for the consultancy request ---
+# --- MODIFIED: Pydantic model for the consultancy request now accepts journal entries ---
 class ConsultancyChatRequest(BaseModel):
     message: str
     user_id: str
+    journal_entries: Optional[List[str]] = None # This is the new field
 
 class ChatResponse(BaseModel):
     reply: str
@@ -74,13 +74,17 @@ async def anonymous_chat_endpoint(request: AnonymousChatRequest):
     response_text = handle_anonymous_chat(request.message, request.session_id)
     return ChatResponse(reply=response_text)
 
-# --- NEW: The missing endpoint for Consultancy Chat ---
+# --- MODIFIED: The endpoint now passes journal entries to the handler ---
 @app.post("/chat/consultancy", response_model=ChatResponse)
 async def consultancy_chat_endpoint(request: ConsultancyChatRequest):
     """
-    This endpoint handles conversations for signed-in users with persistent memory.
+    This endpoint handles conversations for signed-in users and can now receive journal entries.
     """
-    response_text = handle_consultancy_chat(request.message, request.user_id)
+    response_text = handle_consultancy_chat(
+        request.message, 
+        request.user_id,
+        request.journal_entries # Pass the new data to the logic function
+    )
     return ChatResponse(reply=response_text)
 
 

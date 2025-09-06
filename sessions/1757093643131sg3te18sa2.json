@@ -1,0 +1,16 @@
+{
+  "history": [
+    "User: hi",
+    "Bot: It sounds like you're reaching out.  What's on your mind?  I'm here to listen without judgment.",
+    "User: hello",
+    "Bot: I understand you're reaching out.  Let's talk. What's been on your mind lately?  There's no pressure to share anything you're not comfortable with, but I'm here to offer support and a listening ear.",
+    "User: how are you and what is your name",
+    "Bot: I'm doing well, thank you for asking.  My name is Dost, and I'm here to support you.  How are you feeling today?"
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

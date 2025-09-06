@@ -1,66 +1,58 @@
-/* --- Google Font Import --- */
+/* --- General & Font Styles --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
 
-/* --- General Styles & Reset --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #1A1D1A;
     color: #F0F0F0;
-    /* We no longer need flexbox to center the container */
 }
 
-
-/* --- Chat Container --- */
 .chat-container {
-    width: 100%;             /* Fills the full width */
-    height: 100vh;           /* Fills the full viewport height */
-    max-width: 100%;         /* Removes the width limit */
-    max-height: 100vh;       /* Removes the height limit */
+    width: 100%;
+    height: 100vh;
     background-color: #2E332A;
-    border-radius: 0;        /* No rounded corners for full screen */
-    box-shadow: none;        /* No shadow needed */
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-
-/* --- Chat Header --- */
-.chat-header {
-    padding: 15px 25px;
+/* --- Header --- */
+header {
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #3a4035; /* Subtle separator */
+    border-bottom: 1px solid #3a4035;
+    flex-shrink: 0;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.logo img {
-    width: 24px;
-    height: 24px;
-}
-
-.header-icons {
-    display: flex;
-    align-items: center;
     gap: 10px;
 }
 
-.signin-btn {
+.logo-text {
+    font-family: 'Staatliches', cursive;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.signin-btn, .journal-btn {
     padding: 8px 16px;
     border: 1px solid #5F6753;
     background-color: transparent;
@@ -70,15 +62,16 @@ body {
     font-weight: 500;
     font-family: 'Poppins', sans-serif;
     transition: background-color 0.2s, color 0.2s;
+    text-decoration: none; /* For the <a> tag */
 }
 
-.signin-btn:hover {
+.signin-btn:hover, .journal-btn:hover {
     background-color: #5F6753;
     color: white;
 }
 
 
-/* --- Chat Box (Message Area) --- */
+/* --- Chat Box --- */
 .chat-box {
     flex-grow: 1;
     padding: 20px;
@@ -86,94 +79,96 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    
-    /* NEW: Add a max-width and center the chat column */
     max-width: 800px;
     width: 100%;
-    margin: 0 auto; /* This centers the chat column */
+    margin: 0 auto;
 }
 
-/* Custom scrollbar for a cleaner look */
-.chat-box::-webkit-scrollbar {
-    width: 6px;
-}
-.chat-box::-webkit-scrollbar-track {
-    background: transparent;
-}
-.chat-box::-webkit-scrollbar-thumb {
-    background: #5F6753;
-    border-radius: 3px;
-}
+/* ... existing message styles ... */
 
-.message {
-    max-width: 80%;
-    padding: 10px 15px;
-    border-radius: 18px;
-    line-height: 1.5;
-}
-
-.bot-message {
-    background-color: #3a4035;
-    align-self: flex-start;
-    border-top-left-radius: 4px;
-}
-
-.user-message {
-    background-color: #5F6753;
-    align-self: flex-end;
-    color: #fff;
-    border-top-right-radius: 4px;
-}
-
-
-/* --- Chat Input Area --- */
-.chat-input-wrapper {
-    padding: 15px 25px;
-    position: relative;
-}
-
-#user-input {
+/* --- Footer & Input --- */
+footer {
+    padding: 20px;
+    flex-shrink: 0;
+    max-width: 800px;
     width: 100%;
-    height: 50px;
-    background-color: #5F6753; /* Olive green input background */
-    border: none;
-    border-radius: 50px; /* Pill shape */
-    padding-left: 60px; /* Space for the icon */
-    padding-right: 20px;
-    color: #fff;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
+    margin: 0 auto;
 }
 
-#user-input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-#user-input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+.chat-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #5F6753;
+    border-radius: 25px;
+    padding: 5px 10px;
 }
 
 .input-icon {
-    position: absolute;
-    top: 50%;
-    left: 35px;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     background-color: #fff;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #2E332A;
+    font-size: 1.1rem;
 }
 
-.input-icon img {
-    width: 18px;
-    height: 18px;
+#user-input {
+    flex-grow: 1;
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    padding: 0 10px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+#user-input:focus {
+    outline: none;
+}
+#user-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
-/* Hide the original button, as the design doesn't show it */
 #send-btn {
-    display: none;
+    flex-shrink: 0;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background-color: #fff;
+    color: #2E332A;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+#send-btn:hover {
+    background-color: #ddd;
+}
+
+.permission-toggle {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+
+.user-message {
+    align-self: flex-end; /* Pushes user messages to the right */
+    align-items: flex-end; /* Aligns text to the right within the container */
+    background-color: #3a4035;
+}
+
+.bot-message {
+    align-self: flex-start; /* Keeps bot messages on the left */
+    align-items: flex-start; /* Aligns text to the left */
+    background-color: transparent; /* Makes them blend with the background */
 }

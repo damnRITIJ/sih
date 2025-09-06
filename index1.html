@@ -10,36 +10,39 @@
 </head>
 <body>
     <div class="chat-container">
-        <header>
+        <div class="chat-header">
             <div class="logo">
-                <img src="file.svg">
-                <div class="logo-text">PSYCURE</div>
+                <!-- You can use your SVG file here if you prefer -->
+                <img src="file.svg" alt="Psycure Logo">
+                <span>PSYCURE</span>
             </div>
-            <div class="header-buttons">
-                <!-- NEW: Journal button, hidden by default -->
-                <a href="journal.html" class="journal-btn" id="journal-btn" style="display: none;">Journal</a>
+            <div class="header-icons">
                 <button class="signin-btn" id="signin-btn">Sign In</button>
             </div>
-        </header>
-
+        </div>
+        
         <main class="chat-box" id="chat-box">
-            <!-- Chat messages appear here -->
+            <!-- Chat messages will be dynamically added here -->
+              
         </main>
-
+        
         <footer>
             <div class="chat-input-wrapper">
                 <div class="input-icon">
+                    <!-- Using FontAwesome icon for simplicity -->
                     <i class="fa-solid fa-pen-nib"></i>
                 </div>
                 <input type="text" id="user-input" placeholder="Type your message...">
                 <button id="send-btn"><i class="fa-solid fa-arrow-up"></i></button>
             </div>
+            <!-- Permission Toggle for Journal -->
             <div class="permission-toggle" id="permission-toggle" style="display: none;">
                 <input type="checkbox" id="journal-permission">
-                <label for="journal-permission">Allow Dost to see my journal entries for this session</label>
+                <label for="journal-permission">Allow Psycure to see my journal entries for this session</label>
             </div>
         </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

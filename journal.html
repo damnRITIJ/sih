@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psycure - Journal</title>
+    <!-- Note: Renamed CSS file for consistency -->
+    <link rel="stylesheet" href="journal.css"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Staatliches&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- This is the main journal container, hidden by default -->
+    <div class="journal-container" style="display: none;">
+        <header class="journal-header">
+            <h1 class="journal-title">JOURNAL</h1>
+            <div class="user-info">
+                Logged in as: <span id="user-id-display"></span>
+            </div>
+            <a href="index.html" class="back-link">&larr; Back to Chat</a>
+        </header>
+
+        <!-- MODIFIED: The main content is now a flex container -->
+        <main class="journal-content">
+            <!-- New Entry Section -->
+            <div class="new-entry-section">
+                <h2>New Entry</h2>
+                <textarea id="new-entry-textarea" placeholder="What's on your mind today?"></textarea>
+                <button id="save-entry-btn">Save Entry</button>
+            </div>
+
+            <!-- Past Entries Section -->
+            <div class="past-entries-section">
+                <h2>Past Entries</h2>
+                <div id="past-entries-list">
+                    <!-- Journal entries will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Locked view for signed-out users -->
+    <div class="locked-view" id="locked-view">
+        <div class="locked-content">
+            <h2>Journal Locked</h2>
+            <p>Please <a href="index.html">sign in</a> via the chatbot to access your journal.</p>
+        </div>
+    </div>
+
+    <!-- Note: Renamed JS file for consistency -->
+    <script src="journal.js"></script> 
+</body>
+</html>
