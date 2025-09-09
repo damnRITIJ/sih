@@ -34,8 +34,7 @@ def read_root():
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Optional # <-- Add List and Optional
-# Make sure the filename and function names are correct
+from typing import List, Optional
 from anonymous import handle_anonymous_chat, handle_consultancy_chat 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -44,7 +43,6 @@ app = FastAPI(
     description="API for the psychological intervention system."
 )
 
-# --- Add the CORS middleware ---
 origins = ["*"] 
 app.add_middleware(
     CORSMiddleware,
@@ -54,39 +52,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Pydantic models for BOTH request types ---
+# --- CORRECTED Pydantic models ---
 class AnonymousChatRequest(BaseModel):
-    message: str
+    user_message: str # <-- FIX: Changed from 'message' to 'user_message'
     session_id: str
 
-# --- MODIFIED: Pydantic model for the consultancy request now accepts journal entries ---
 class ConsultancyChatRequest(BaseModel):
-    message: str
+    user_message: str # <-- FIX: Changed from 'message' to 'user_message'
     user_id: str
-    journal_entries: Optional[List[str]] = None # This is the new field
+    session_id: str   # Added for consistency to handle test states
+    journal_entries: Optional[List[dict]] = [] # Changed to dict for full entries
 
 class ChatResponse(BaseModel):
     reply: str
 
-# --- Endpoint for Anonymous Chat (your existing code) ---
+# --- CORRECTED Endpoints ---
 @app.post("/chat/anonymous", response_model=ChatResponse)
 async def anonymous_chat_endpoint(request: AnonymousChatRequest):
-    response_text = handle_anonymous_chat(request.message, request.session_id)
+    # Pass user_message instead of message
+    response_text = handle_anonymous_chat(request.user_message, request.session_id)
     return ChatResponse(reply=response_text)
 
-# --- MODIFIED: The endpoint now passes journal entries to the handler ---
 @app.post("/chat/consultancy", response_model=ChatResponse)
 async def consultancy_chat_endpoint(request: ConsultancyChatRequest):
-    """
-    This endpoint handles conversations for signed-in users and can now receive journal entries.
-    """
     response_text = handle_consultancy_chat(
-        request.message, 
-        request.user_id,
-        request.journal_entries # Pass the new data to the logic function
+        user_message=request.user_message, 
+        user_id=request.user_id,
+        journal_entries=request.journal_entries,
+        session_id=request.session_id # Pass session_id to the handler
     )
     return ChatResponse(reply=response_text)
-
 
 @app.get("/")
 def read_root():

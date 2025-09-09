@@ -1,0 +1,14 @@
+{
+  "history": [
+    "User: hello",
+    "Bot: It's good to connect with you! I'm here to listen whenever you're ready to share what's on your mind, or if you just want to chat. How are you doing today?",
+    "User: hi",
+    "Bot: It's good to have you here. There's no pressure at all; I'm just here to listen whenever you're ready to share, or if you simply want to chat about anything that comes to mind."
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "user": "helo",
+    "bot": "It's good to connect. How are you doing today?"
+  },
+  {
+    "user": "helo",
+    "bot": "I'm here. You said \"helo\" again. I'm still wondering how you're doing today, or if there's anything specific you'd like to share. Just let me know."
+  },
+  {
+    "user": "hey can you see my jounals",
+    "bot": "Yes, I can access your journal entries, Ritij. I noticed you mentioned feeling sad, and I want you to know I'm here to listen and support you through whatever you're experiencing. Please feel free to share more if you'd like, or we can just sit with that feeling for a bit."
+  },
+  {
+    "user": "oh my god you are so nice",
+    "bot": "Thank you, Ritij. It means a lot to me that you feel that way. My main goal is to be a supportive presence for you, and I'm here to listen to whatever you need, especially as you mentioned feeling sad earlier."
+  }
+]

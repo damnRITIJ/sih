@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Support Volunteer Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('main.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background: rgba(42, 69, 1, 0.2); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: black;
+        }
+        .form-input::placeholder {
+            color: black;
+            opacity: 0.7; 
+        }
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 94, 1, 0.4);
+            border-color: #487104;
+        }
+        
+        
+        .form-checkbox:focus {
+             box-shadow: 0 0 0 3px rgba(76, 122, 3, 0.4);
+        }
+        .form-checkbox:checked {
+            background-color: #4d7906;
+            border-color: #497403;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header class="p-6">
+        <div class="container mx-auto flex justify-between items-center">
+           
+            <div class="flex items-center space-x-3">
+                <img src="file.svg">
+                <span class="text-2xl font-bold tracking-wider text-gray-900">PSYCURE</span>
+            </div>
+
+            <div class="hidden md:block text-right text-xs uppercase tracking-widest text-gray-900">
+                <p>Because every student deserves stigma-free support,</p>
+                <p>safe spaces, and the strength to thrive.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center w-full p-4 sm:p-6 lg:p-8">
+        <div class="glass-card w-full max-w-2xl mx-auto rounded-2xl overflow-hidden">
+
+            <div id="form-container" class="p-8 sm:p-10">
+            
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Become a Peer Support Volunteer</h1>
+                    <p class="mt-3 text-gray-800">Join our team of trained student volunteers and make a real difference.</p>
+                </div>
+
+            \
+                <form id="volunteer-form" novalidate>
+                    <div class="max-w-md mx-auto">
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="fullName" class="block text-sm font-medium text-gray-800 mb-1">Full Name</label>
+                                    <input type="text" id="fullName" name="fullName" required class="form-input w-full p-3 rounded-md transition" placeholder="Your full name">
+                                </div>
+                                <div>
+                                    <label for="studentId" class="block text-sm font-medium text-gray-800 mb-1">Student ID / Roll No.</label>
+                                    <input type="text" id="studentId" name="studentId" required class="form-input w-full p-3 rounded-md transition" placeholder="e.g., 24/CS/145">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-800 mb-1">Email Address</label>
+                                    <input type="email" id="email" name="email" required class="form-input w-full p-3 rounded-md transition" placeholder="you@example.com">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-800 mb-1">Phone Number (Optional)</label>
+                                    <input type="tel" id="phone" name="phone" class="form-input w-full p-3 rounded-md transition" placeholder="For urgent contact">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="motivation" class="block text-sm font-medium text-gray-800 mb-1">Why do you want to volunteer?</label>
+                                <textarea id="motivation" name="motivation" rows="4" required class="form-input w-full p-3 rounded-md transition" placeholder="Tell us a bit about what motivates you."></textarea>
+                            </div>
+                            <div class="relative flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="commitment" name="commitment" type="checkbox" required class="form-checkbox h-4 w-4 bg-transparent border-gray-400 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="commitment" class="font-medium text-gray-800">I understand this role requires mandatory training and a weekly time commitment.</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-10">
+                            <button type="submit" class="w-full bg-lime-500 text-gray-900 font-bold py-3 px-4 rounded-md hover:bg-lime-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-lime-500 transition">
+                                Submit Application
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="thank-you-message" class="hidden p-10 text-center">
+                <svg class="mx-auto h-12 w-12 text-lime-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="mt-4 text-3xl font-bold text-gray-900">Thank You!</h2>
+                <p class="mt-3 text-gray-800">Your application has been received. We'll contact you via email with the next steps.</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="w-full bg-white p-2"></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('volunteer-form');
+            const formContainer = document.getElementById('form-container');
+            const thankYouMessage = document.getElementById('thank-you-message');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                
+                formContainer.classList.add('hidden');
+                thankYouMessage.classList.remove('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+

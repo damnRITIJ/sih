@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newEntryTextarea = document.getElementById('new-entry-textarea');
     const saveEntryBtn = document.getElementById('save-entry-btn');
     const pastEntriesList = document.getElementById('past-entries-list');
-    const userIdDisplay = document.getElementById('user-id-display'); // Get the display element
+    const userIdDisplay = document.getElementById('user-id-display');
 
     let currentUserId = null;
 
@@ -17,39 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const loggedInUser = localStorage.getItem(LOGGED_IN_USER_KEY);
 
         if (loggedInUser) {
-            // If the user ID is found, the user is signed in
             currentUserId = loggedInUser;
-            
-            // Hide the locked message and show the journal
             lockedView.style.display = 'none';
             journalContainer.style.display = 'flex';
-            
-            // --- THIS IS THE FIX: Display the user's ID ---
             userIdDisplay.textContent = currentUserId;
-
-            loadJournalEntries(); // Load the user's entries
+            loadJournalEntries();
         } else {
-            // If no user ID is found, show the locked message and hide the journal
+            currentUserId = null; // Clear the user ID
             lockedView.style.display = 'flex';
             journalContainer.style.display = 'none';
+            userIdDisplay.textContent = ''; // Clear the display
         }
     }
-
-    // --- The rest of your script remains the same ---
 
     function getJournalKey() {
         return `journal_${currentUserId}`;
     }
 
     function loadJournalEntries() {
+        pastEntriesList.innerHTML = ''; // Clear previous entries
+        if (!currentUserId) return; // Don't try to load if no user is logged in
+
         const journalKey = getJournalKey();
         const entries = JSON.parse(localStorage.getItem(journalKey)) || [];
         
-        pastEntriesList.innerHTML = ''; 
-        
+        // Display entries in reverse chronological order (newest first)
         entries.slice().reverse().forEach((entry, index) => {
             const entryElement = document.createElement('div');
             entryElement.classList.add('entry');
+            // Calculate the original index for deletion purposes
             const originalIndex = entries.length - 1 - index;
             entryElement.innerHTML = `
                 <div class="entry-header">
@@ -64,8 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveJournalEntry() {
         const content = newEntryTextarea.value.trim();
-        if (content === '') {
-            newEntryTextarea.placeholder = "Please write something before saving.";
+        if (content === '' || !currentUserId) {
             return;
         }
         const journalKey = getJournalKey();
@@ -79,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteJournalEntry(index) {
+        if (!currentUserId) return;
         const journalKey = getJournalKey();
         const entries = JSON.parse(localStorage.getItem(journalKey)) || [];
         entries.splice(index, 1);
@@ -95,6 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Are you sure you want to permanently delete this entry?')) {
                 deleteJournalEntry(indexToDelete);
             }
+        }
+    });
+
+    // --- Listen for changes from other tabs ---
+    // This makes the page reactive if the user logs in/out elsewhere
+    window.addEventListener('storage', (event) => {
+        if (event.key === LOGGED_IN_USER_KEY) {
+            checkLoginState();
         }
     });
 

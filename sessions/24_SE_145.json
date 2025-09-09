@@ -1,0 +1,9 @@
+{
+  "history": [],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

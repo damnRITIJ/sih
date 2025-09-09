@@ -4,40 +4,70 @@ document.addEventListener("DOMContentLoaded", () => {
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
     const signInBtn = document.getElementById("signin-btn");
+    const signOutBtn = document.getElementById("signout-btn");
     const journalBtn = document.getElementById("journal-btn");
     const permissionToggle = document.getElementById('permission-toggle');
     const journalPermissionCheckbox = document.getElementById('journal-permission');
 
-    // --- Session & State Management ---
+    // --- State Management ---
+    const USER_ID_KEY = 'psycureUserId'; // Use a constant for the key name
     let sessionId = sessionStorage.getItem("sessionId");
     if (!sessionId) {
         sessionId = Date.now().toString() + Math.random().toString(36).substring(2);
         sessionStorage.setItem("sessionId", sessionId);
     }
-    let userState = 'anonymous'; // Can be 'anonymous' or 'consultancy'
+    let userState = 'anonymous'; 
     let currentUserId = null;
 
-    // --- Sign-In Button Logic ---
-    signInBtn.addEventListener("click", () => {
-        const userId = prompt("Please enter your College ID to sign in:");
-        
-        if (userId && userId.trim() !== "") {
-            userState = 'consultancy';
-            currentUserId = userId.trim();
-            
-            localStorage.setItem('psycureUserId', currentUserId); 
-            
-            // Update the UI to show the user is signed in
-            signInBtn.style.display = 'none';
-            journalBtn.style.display = 'inline-block';
-            permissionToggle.style.display = 'block';
+    // --- UI Update Functions ---
+    function showLoggedInView(userId) {
+        userState = 'consultancy';
+        currentUserId = userId;
+        signInBtn.style.display = 'none';
+        signOutBtn.style.display = 'inline-block';
+        journalBtn.style.display = 'inline-block';
+        permissionToggle.style.display = 'block';
+    }
 
-            alert(`Welcome! You are now in consultancy mode. Your chat history and journal will be saved.`);
-            
+    function showLoggedOutView() {
+        userState = 'anonymous';
+        currentUserId = null;
+        signInBtn.style.display = 'inline-block';
+        signOutBtn.style.display = 'none';
+        journalBtn.style.display = 'none';
+        permissionToggle.style.display = 'none';
+    }
+
+    // --- Sign-In and Sign-Out Logic ---
+    function signIn() {
+        const userId = prompt("Please enter your College ID to sign in:");
+        if (userId && userId.trim() !== "") {
+            const trimmedUserId = userId.trim();
+            localStorage.setItem(USER_ID_KEY, trimmedUserId); 
+            showLoggedInView(trimmedUserId);
             chatBox.innerHTML = '';
-            addMessage(`Hi ${currentUserId}! You're now in consultancy mode. Your conversations will be remembered. How can I help you today?`, "bot");
+            addMessage(`Hi ${trimmedUserId}! You're now in consultancy mode. How can I help?`, "bot");
         }
-    });
+    }
+
+    function signOut() {
+        localStorage.removeItem(USER_ID_KEY); 
+        showLoggedOutView();
+        chatBox.innerHTML = '';
+        addMessage("You have been signed out. Your session is now anonymous.", "bot");
+    }
+
+    // --- Check initial state when the page loads ---
+    function checkInitialState() {
+        const loggedInUser = localStorage.getItem(USER_ID_KEY);
+        if (loggedInUser) {
+            showLoggedInView(loggedInUser);
+            addMessage(`Welcome back, ${loggedInUser}! Your conversation is being continued.`, "bot");
+        } else {
+            showLoggedOutView();
+            addMessage("Welcome! You are in anonymous mode. Your chat will not be saved. Sign in to get personalized help.", "bot");
+        }
+    }
 
     // --- Function to add a message to the chat box ---
     function addMessage(message, sender, messageId = null) {
@@ -46,12 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (messageId) {
             messageElement.id = messageId;
         }
-        
         const pElement = document.createElement("p");
         // Basic markdown for bold text (**text**)
         message = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        pElement.innerHTML = message; // Use innerHTML to render the <strong> tag
-
+        pElement.innerHTML = message;
         messageElement.appendChild(pElement);
         chatBox.appendChild(messageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -64,32 +92,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         addMessage(messageText, "user");
         userInput.value = "";
-
-        // Disable input and show loading indicator
         userInput.disabled = true;
         sendBtn.disabled = true;
         addMessage("...", "bot", "loading-indicator");
 
-        // Conditional Endpoint and Payload
-        let endpoint = "http://127.0.0.1:8000/chat/anonymous";
-        let payload = {
-            message: messageText,
-            session_id: sessionId 
-        };
+        let endpoint, payload;
 
         if (userState === 'consultancy') {
             endpoint = "http://127.0.0.1:8000/chat/consultancy";
             payload = {
-                message: messageText,
+                user_message: messageText,
                 user_id: currentUserId,
-                journal_entries: [] // Default
+                session_id: sessionId, // Pass session_id for test state management
+                journal_entries: []
             };
-            
             if (journalPermissionCheckbox.checked) {
                 const journalKey = `journal_${currentUserId}`;
                 const entries = JSON.parse(localStorage.getItem(journalKey)) || [];
-                payload.journal_entries = entries.slice(-5).map(entry => entry.content);
+                // Send the full entry object, not just the content
+                payload.journal_entries = entries.slice(-5);
             }
+        } else {
+            endpoint = "http://127.0.0.1:8000/chat/anonymous";
+            payload = {
+                user_message: messageText,
+                session_id: sessionId 
+            };
         }
 
         try {
@@ -98,22 +126,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
-
-            const loadingIndicator = document.getElementById("loading-indicator");
-            if (loadingIndicator) { loadingIndicator.remove(); }
-
-            if (!response.ok) { throw new Error("Network response was not ok"); }
-
+            document.getElementById("loading-indicator")?.remove();
+            if (!response.ok) throw new Error("Network response was not ok");
             const data = await response.json();
             addMessage(data.reply, "bot");
-
         } catch (error) {
             console.error("Error:", error);
-            const loadingIndicator = document.getElementById("loading-indicator");
-            if (loadingIndicator) { loadingIndicator.remove(); }
-            addMessage("Sorry, something went wrong. Please check the connection and try again.", "bot");
+            document.getElementById("loading-indicator")?.remove();
+            addMessage("Sorry, something went wrong. Please try again.", "bot");
         } finally {
-            // Re-enable input
             userInput.disabled = false;
             sendBtn.disabled = false;
             userInput.focus();
@@ -121,6 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Event listeners ---
+    signInBtn.addEventListener("click", signIn);
+    signOutBtn.addEventListener("click", signOut);
     sendBtn.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
@@ -129,5 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // --- Initialize the chat when the page loads ---
+    checkInitialState();
     userInput.focus();
 });
