@@ -27,8 +27,9 @@ embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 vectordb = Chroma(persist_directory='db', embedding_function=embeddings)
 retriever = vectordb.as_retriever(search_type="mmr", search_kwargs={'k': 4, 'fetch_k': 20})
 
-# --- Anonymous Chat Logic ---
+
 ANONYMOUS_PROMPT_TEMPLATE = """
+
 You are 'PSYBOT', a warm and friendly wellness companion for college students.
 CRITICAL INSTRUCTION: NEVER start your reply with "Hi," "Hello," or any greeting. Jump directly into your supportive response.
 Use the provided CONTEXT from your knowledge base to answer the user's QUESTION. The QUESTION may include past conversation history for context.
@@ -44,7 +45,6 @@ PSYBOT's Empathetic Reply:
 ANONYMOUS_PROMPT = PromptTemplate.from_template(ANONYMOUS_PROMPT_TEMPLATE)
 anonymous_qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever, chain_type_kwargs={"prompt": ANONYMOUS_PROMPT})
 
-# --- Session and History Helper Functions ---
 
 def _sanitize_user_id(user_id: str) -> str:
     return user_id.replace('/', '_').replace('\\', '_')
@@ -64,23 +64,23 @@ def load_chat_history(user_id):
     return []
 
 def save_session(session_id, data):
-    # Sanitize the session_id before creating a file path
+  
     sanitized_id = _sanitize_user_id(session_id)
     filepath = os.path.join(SESSION_DIR, f"{sanitized_id}.json")
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=2)
 
 def load_session(session_id):
-    # Sanitize the session_id to find the correct file
+    
     sanitized_id = _sanitize_user_id(session_id)
     filepath = os.path.join(SESSION_DIR, f"{sanitized_id}.json")
     if os.path.exists(filepath):
         with open(filepath, 'r') as f:
             return json.load(f)
-    # Return the default state if no session file is found
+   
     return {"history": [], "test_state": {"active": False, "test_name": None, "current_question": 0, "answers": []}}
 
-# --- Test Flow Functions (start_test, handle_test_response) ---
+
 def start_test(session_state, test_name: str) -> str:
     test = get_test(test_name)
     if not test:
@@ -115,7 +115,7 @@ def handle_test_response(session_state, user_answer: str) -> str:
         state["active"] = False
         return f"Thank you for completing the assessment.\n\nYour total score is: {total_score}.\n\n**Interpretation:** {result}\n\nRemember, this is not a diagnosis. How can I help you further?"
 
-# --- Main Handler for Anonymous Chat ---
+
 def handle_anonymous_chat(user_message: str, session_id: str) -> str:
     session = load_session(session_id)
     test_state, history = session["test_state"], session["history"]
@@ -225,17 +225,15 @@ def handle_consultancy_chat(
     """
     Handles chat for signed-in users, including test-taking logic.
     """
-    # We need a session to manage the state of tests, even for logged-in users.
-    # The session is ephemeral, while chat history is persistent.
+   
     if not session_id:
-        session_id = user_id # Use user_id as a default session_id if not provided
+        session_id = user_id 
 
     session = load_session(session_id)
     test_state = session["test_state"]
-    history = load_chat_history(user_id) # Persistent chat history
+    history = load_chat_history(user_id) 
     msg_lower = user_message.lower()
-    
-    # --- ADDED: Test-taking logic for signed-in users ---
+
     if test_state["active"]:
         bot_reply = handle_test_response(session, user_message)
     elif "anxiety test" in msg_lower or "gad-7" in msg_lower:
@@ -243,18 +241,17 @@ def handle_consultancy_chat(
     elif "depression test" in msg_lower or "phq-9" in msg_lower:
         bot_reply = start_test(session, "phq9")
     else:
-        # --- This part uses the new, efficient chain ---
+       
         chat_history_str = "\n".join(
             [f"User: {turn['user']}\nBot: {turn['bot']}" for turn in history]
         )
         
         journal_str = "No journal entries provided."
         if journal_entries:
-            # Create a bulleted list from the list of entry strings
+            
             journal_str = "- " + "\n- ".join(journal_entries)
 
-        # The `invoke` call now passes a dictionary with separate keys.
-        # The chain automatically routes `user_message` to the retriever.
+        
         bot_reply = consultancy_chain.invoke({
             "user_message": user_message,
             "chat_history": chat_history_str,
