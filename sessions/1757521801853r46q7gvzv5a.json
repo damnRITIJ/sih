@@ -1,0 +1,12 @@
+{
+  "history": [
+    "User: hello",
+    "Bot: It sounds like you might need a moment.  Take a deep breath.  Is there anything I can help you with today?  Even if it's just listening, I'm here for you."
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

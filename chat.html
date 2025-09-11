@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Peer Support Chat</title>
+  <style>
+    :root {
+      --card-bg: rgba(0, 0, 0, 0.75);
+      --panel-bg: rgba(18, 18, 18, 0.9);
+      --accent: #4da6ff;
+      --green: #28a745;
+      --danger: #dc3545;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: url(main.png);
+      background-size: cover;
+      color: #eee;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    header {
+      position: relative;
+      padding: 12px 18px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header img.logo {
+      height: 440px;
+      position: absolute;
+      left: 18px;
+      top: 8px;
+    }
+
+    header .title {
+      margin: 0 auto;
+      color: #fff;
+      font-weight: 600
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 920px;
+      height: 78vh;
+      background: var(--card-bg);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* left: messages */
+    .left {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+    }
+
+    .messages {
+      flex: 1;
+      overflow: auto;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(10, 10, 10, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .message {
+      margin: 10px 0;
+      max-width: 78%;
+      padding: 8px;
+      border-radius: 10px;
+      background: rgba(40, 40, 40, 0.85);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .message.mine {
+      background: linear-gradient(90deg, var(--accent), #1f6fb7);
+      color: white;
+      margin-left: auto;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #cfd8e3;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .text {
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      background: var(--panel-bg);
+    }
+
+    .controls input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: #111;
+      color: #fff;
+    }
+
+    .controls button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      background: var(--green);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700
+    }
+
+    .controls button[disabled] {
+      opacity: .5;
+      cursor: not-allowed
+    }
+
+    /* right: info / moderator panel */
+    .right {
+      padding: 14px;
+      border-left: 1px solid rgba(255, 255, 255, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.8));
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 10px;
+      border-radius: 8px
+    }
+
+    .small {
+      font-size: 13px;
+      color: #c9d1da
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer
+    }
+
+    .btn-muted {
+      background: transparent;
+      color: #cfd8e3;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 6px 8px;
+      border-radius: 6px
+    }
+
+    .message .actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <img src="logo.png" alt="logo" class="logo" />
+      <h1 class="title">Peer Support — Anonymous Chat</h1>
+    </header>
+
+    <main>
+      <div class="card" role="application">
+        <section class="left">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-weight:700">#general</div>
+            <div style="font-size:13px;color:#c9d1da">You: <span id="meName">—</span> <span id="roleBadge"
+                style="margin-left:8px;font-weight:700"></span></div>
+          </div>
+
+          <div id="messages" class="messages" aria-live="polite"></div>
+
+          <div class="controls">
+            <input id="messageInput" placeholder="Type your message…" aria-label="Message input" />
+            <button id="sendBtn">Send</button>
+          </div>
+        </section>
+
+        <aside class="right">
+          <div class="panel">
+            <div style="font-weight:700">Session info</div>
+            <div class="small" style="margin-top:8px">Username: <span id="infoName">—</span></div>
+            <div class="small">Role: <span id="infoRole">—</span></div>
+            <div class="small">UID: <span id="infoUid" style="word-break:break-all">—</span></div>
+          </div>
+
+          <div class="panel" id="modPanel" style="display:none">
+            <div style="font-weight:700;margin-bottom:6px">Moderator tools</div>
+            <div class="small">As moderator you can delete messages and block users.</div>
+            <div style="margin-top:10px">
+              <button id="refreshBlocked" class="btn-muted">Refresh blocked list</button>
+            </div>
+            <div id="blockedList" style="margin-top:10px;font-size:13px;color:#c9d1da"></div>
+          </div>
+
+          <div class="panel">
+            <div style="font-weight:700;margin-bottom:6px">Help</div>
+            <div class="small">This is a peer-support chat. No personal info. If you are in immediate danger, contact
+              emergency services.</div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+  /* ========== FIREBASE & APP LOGIC ========== */
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  /* ---------- CONFIG: paste your firebase config ---------- */
+  const firebaseConfig = {
+    apiKey: "AIzaSyCV4zT-qvBCJ3Sdx1RoIsX8zZX6SatiX-A",
+    authDomain: "peer-support-chat-9e96a.firebaseapp.com",
+    projectId: "peer-support-chat-9e96a",
+    storageBucket: "peer-support-chat-9e96a.firebasestorage.app",
+    messagingSenderId: "138070336116",
+    appId: "1:138070336116:web:dc745891689eeca366a721",
+    measurementId: "G-YWSYFZBEQQ"
+  };
+  /* ------------------------------------------------------- */
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  /* UI */
+  const messagesEl = document.getElementById('messages');
+  const sendBtn = document.getElementById('sendBtn');
+  const inputEl = document.getElementById('messageInput');
+  const meNameEl = document.getElementById('meName');
+  const infoName = document.getElementById('infoName');
+  const infoRole = document.getElementById('infoRole');
+  const infoUid = document.getElementById('infoUid');
+  const roleBadge = document.getElementById('roleBadge');
+  const modPanel = document.getElementById('modPanel');
+  const blockedListEl = document.getElementById('blockedList');
+  const refreshBlockedBtn = document.getElementById('refreshBlocked');
+
+  /* Local session values saved by index.html */
+  const savedName = localStorage.getItem('username') || 'Anonymous';
+  const savedRole = localStorage.getItem('role') || 'user';
+
+  /* runtime state */
+  let currentUser = null;
+  let uid = null;
+  let blockedSet = new Set();
+  let isBlocked = false;
+
+  /* helper: escape HTML */
+  function esc(s) { return String(s || '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
+
+  /* show UI initial */
+  meNameEl.textContent = esc(savedName);
+  infoName.textContent = esc(savedName);
+  infoRole.textContent = esc(savedRole);
+  roleBadge.textContent = savedRole === 'moderator' ? 'MOD' : '';
+  if (savedRole === 'moderator') modPanel.style.display = 'block';
+
+  /* sign in anonymously so Firestore rules that require auth will pass */
+  signInAnonymously(auth).catch(e => console.error('anon sign-in error', e));
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+    currentUser = user;
+    uid = user.uid;
+    infoUid.textContent = uid;
+
+    // create / update users doc
+    try {
+      await setDoc(doc(db, 'users', uid), {
+        displayName: savedName,
+        role: savedRole,
+        lastSeen: serverTimestamp()
+      }, { merge: true });
+    } catch (e) { console.error('set users doc error', e); }
+
+    // subscribe blockedUsers collection to keep a set
+    const blockedRef = collection(db, 'blockedUsers');
+    onSnapshot(blockedRef, snap => {
+      blockedSet = new Set(snap.docs.map(d => d.id));
+      // update blockedList UI for moderators
+      if (savedRole === 'moderator') {
+        blockedListEl.textContent = snap.docs.length ? snap.docs.map(d => d.id).join(', ') : 'No blocked users';
+      }
+      // check if current user is blocked
+      isBlocked = blockedSet.has(uid);
+      if (isBlocked) {
+        inputEl.disabled = true;
+        sendBtn.disabled = true;
+        inputEl.placeholder = 'You are blocked and cannot send messages.';
+      } else {
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+        inputEl.placeholder = 'Type your message…';
+      }
+    });
+
+    // start listening for messages once auth + user doc are set
+    startMessageListener();
+  });
+
+  /* start message listener */
+  function startMessageListener() {
+    const messagesRef = collection(db, 'messages');
+    const q = query(messagesRef, orderBy('timestamp', 'asc'));
+    onSnapshot(q, (snapshot) => {
+      messagesEl.innerHTML = '';
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if (!data) return;
+        // ignore messages from blocked users
+        if (blockedSet.has(data.userId)) return;
+
+        // build message element
+        const m = document.createElement('div');
+        m.className = 'message' + ((data.userId === uid) ? ' mine' : '');
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = data.displayName || 'Anonymous';
+        const txt = document.createElement('div');
+        txt.className = 'text';
+        txt.innerHTML = esc(data.text || '');
+        m.appendChild(meta);
+        m.appendChild(txt);
+
+        // moderator actions
+        if (savedRole === 'moderator') {
+          const actions = document.createElement('div');
+          actions.className = 'actions';
+
+          // Delete button
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn-danger';
+          delBtn.textContent = 'Delete';
+          delBtn.onclick = async () => {
+            try {
+              await deleteDoc(doc(db, 'messages', docSnap.id));
+            } catch (e) {
+              console.error('delete error', e);
+              alert('Could not delete (check rules).');
+            }
+          };
+
+          // Block/Unblock button
+          const blkBtn = document.createElement('button');
+          blkBtn.className = 'btn-muted';
+          const targetUserId = data.userId;
+
+          if (targetUserId) {
+            const blockedDocRef = doc(db, 'blockedUsers', targetUserId);
+            getDoc(blockedDocRef).then((blockedDoc) => {
+              if (blockedDoc.exists()) {
+                blkBtn.textContent = 'Unblock User';
+                blkBtn.onclick = async () => {
+                  if (confirm(`Unblock ${data.displayName || targetUserId}?`)) {
+                    try {
+                      await deleteDoc(blockedDocRef);
+                      alert(`${data.displayName || targetUserId} unblocked.`);
+                      blkBtn.textContent = 'Block User';
+                    } catch (e) {
+                      console.error('unblock error', e);
+                      alert('Could not unblock (check rules).');
+                    }
+                  }
+                };
+              } else {
+                blkBtn.textContent = 'Block User';
+                blkBtn.onclick = async () => {
+                  if (confirm(`Block ${data.displayName || targetUserId}? This will hide their past & future messages.`)) {
+                    try {
+                      await setDoc(blockedDocRef, {
+                        blocked: true,
+                        blockedBy: uid,
+                        blockedAt: serverTimestamp()
+                      });
+                      alert(`${data.displayName || targetUserId} blocked.`);
+                      blkBtn.textContent = 'Unblock User';
+                    } catch (e) {
+                      console.error('block error', e);
+                      alert('Could not block (check rules).');
+                    }
+                  }
+                };
+              }
+            });
+          }
+
+          actions.appendChild(delBtn);
+          actions.appendChild(blkBtn);
+          m.appendChild(actions);
+        }
+
+        messagesEl.appendChild(m);
+      });
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+  }
+
+  /* send message */
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) sendMessage(); });
+
+  async function sendMessage() {
+    const txt = inputEl.value.trim();
+    if (!txt) return;
+    if (!uid) return alert('Signing in — try again in a moment.');
+    if (blockedSet.has(uid)) return alert('You are blocked and cannot send messages.');
+
+    try {
+      await addDoc(collection(db, 'messages'), {
+        text: txt,
+        displayName: savedName,
+        userId: uid,
+        timestamp: serverTimestamp(),
+        room: 'general'
+      });
+      inputEl.value = '';
+    } catch (e) {
+      console.error('send error', e);
+      alert('Could not send message. Check console and Firestore rules.');
+    }
+  }
+
+  /* refresh blocked list manual */
+  refreshBlockedBtn?.addEventListener('click', () => {
+    blockedListEl.style.opacity = '0.6';
+    setTimeout(() => blockedListEl.style.opacity = '1', 200);
+  });
+</script>
+
+</body>
+
+</html>

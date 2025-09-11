@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psymate - Peer Support Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('main.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .glass-card {
+            background: rgba(17, 25, 40, 0.6); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .form-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.4);
+            border-color: #a3e635;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-white p-4 sm:p-6 lg:p-8">
+
+    <!-- Header -->
+    <header class="w-full">
+        <div class="flex items-center gap-4">
+             <img src="file.svg" alt="Psycare Logo" class="w-10 h-10">
+             <h1 class="text-3xl font-bold tracking-wider" style="color: black;">PSYCURE</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col items-center justify-center">
+        <div class="text-center mb-8">
+            <h2 class="text-4xl sm:text-5xl font-bold" style="color: black;">Psymate Peer Support</h2>
+            <p class="text-lg text-gray-200 mt-2" style="color: black;">Connect with someone who understands.</p>
+        </div>
+
+        <div class="glass-card w-full max-w-md mx-auto rounded-2xl p-8">
+            <!-- Step 1: Role Selection -->
+            <div id="roleSelection" class="text-center">
+                <h2 class="text-2xl font-semibold mb-6">How are you joining today?</h2>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button id="selectUserBtn" class="w-full bg-lime-500 hover:bg-lime-600 text-black font-bold py-3 px-4 rounded-xl transition duration-300">I need support (User)</button>
+                    <button id="selectModeratorBtn" class="w-full bg-gray-600 hover:bg-gray-700 font-bold py-3 px-4 rounded-xl transition duration-300">I'm a volunteer (Psymate)</button>
+                </div>
+            </div>
+
+            <!-- Step 2a: User Registration Form (Initially Hidden) -->
+            <div id="userForm" class="hidden">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Enter a Nickname</h2>
+                <input type="text" id="usernameInput" placeholder="Choose a temporary nickname" class="form-input w-full p-3 rounded-lg mb-4 text-center">
+                <button id="registerUserBtn" class="w-full bg-lime-500 hover:bg-lime-600 text-black font-bold py-3 px-4 rounded-xl transition duration-300">Enter Chat</button>
+                <button class="back-btn mt-3 text-gray-300 hover:text-white transition">Back</button>
+            </div>
+
+            <!-- Step 2b: Moderator Registration Form (Initially Hidden) -->
+            <div id="moderatorForm" class="hidden">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Psymate Volunteer Login</h2>
+                <input type="text" id="modUsernameInput" placeholder="Your Username" class="form-input w-full p-3 rounded-lg mb-4">
+                <input type="password" id="modIdInput" placeholder="Your Volunteer ID" class="form-input w-full p-3 rounded-lg mb-4">
+                <button id="registerModeratorBtn" class="w-full bg-lime-500 hover:bg-lime-600 text-black font-bold py-3 px-4 rounded-xl transition duration-300">Login & Enter Chat</button>
+                <button class="back-btn mt-3 text-gray-300 hover:text-white transition">Back</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get all the elements from the page
+            const roleSelection = document.getElementById('roleSelection');
+            const userForm = document.getElementById('userForm');
+            const moderatorForm = document.getElementById('moderatorForm');
+
+            const selectUserBtn = document.getElementById('selectUserBtn');
+            const selectModeratorBtn = document.getElementById('selectModeratorBtn');
+            const backBtns = document.querySelectorAll('.back-btn');
+            
+            const registerUserBtn = document.getElementById('registerUserBtn');
+            const registerModeratorBtn = document.getElementById('registerModeratorBtn');
+
+            // --- Logic to show/hide forms ---
+            const showForm = (formToShow) => {
+                roleSelection.classList.add('hidden');
+                userForm.classList.add('hidden');
+                moderatorForm.classList.add('hidden');
+                formToShow.classList.remove('hidden');
+            };
+
+            // --- Attaching Event Listeners ---
+            selectUserBtn.addEventListener('click', () => showForm(userForm));
+            selectModeratorBtn.addEventListener('click', () => showForm(moderatorForm));
+            backBtns.forEach(btn => btn.addEventListener('click', () => showForm(roleSelection)));
+
+            // --- User Registration Logic ---
+            registerUserBtn.addEventListener('click', () => {
+                const username = document.getElementById('usernameInput').value;
+                if (username.trim() !== "") {
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("role", "user");
+                    window.location.href = "chat.html";
+                }
+            });
+
+            // --- Moderator Registration Logic ---
+            registerModeratorBtn.addEventListener('click', () => {
+                const modId = document.getElementById('modIdInput').value;
+                const modUsername = document.getElementById('modUsernameInput').value;
+
+                if (modId.trim() !== "" && modUsername.trim() !== "") {
+                    console.warn("Skipping server-side moderator validation for demonstration.");
+                    localStorage.setItem("username", modUsername);
+                    localStorage.setItem("role", "moderator");
+                    window.location.href = "chat.html";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

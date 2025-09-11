@@ -1,0 +1,12 @@
+{
+  "history": [
+    "User: hello",
+    "Bot: It sounds like you might need a moment of calm.  Let's take a few deep breaths together. Inhale slowly through your nose, hold for a few seconds, and exhale slowly through your mouth. Repeat this a few times.  How are you feeling now?"
+  ],
+  "test_state": {
+    "active": false,
+    "test_name": null,
+    "current_question": 0,
+    "answers": []
+  }
+}

@@ -22,7 +22,7 @@ if not os.path.exists(CHAT_LOGS_DIR):
     os.makedirs(CHAT_LOGS_DIR)
 
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.5)
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.5)
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 vectordb = Chroma(persist_directory='db', embedding_function=embeddings)
 retriever = vectordb.as_retriever(search_type="mmr", search_kwargs={'k': 4, 'fetch_k': 20})

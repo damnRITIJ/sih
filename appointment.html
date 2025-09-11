@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psycure - Book Appointment</title>
+    <link rel="stylesheet" href="appointment.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">
+                <img src="file.svg" alt="Psycure Logo">
+                <span>PSYCURE</span>
+            </div>
+            <p class="header-tagline">
+                BECAUSE EVERY STUDENT DESERVES STIGMA-FREE SUPPORT,
+                SAFE SPACES, AND THE STRENGTH TO THRIVE.
+            </p>
+        </header>
+
+        <main class="booking-container">
+            <div class="booking-column">
+                <h3>1. SELECT COUNSELOR</h3>
+                <div class="counselor-list">
+                    <div class="counselor-card" data-counselor-id="1" data-counselor-name="Dr. Anna Singh">
+                        <div class="counselor-info">
+                            <img src="doctor1.jpg" alt="Dr. Anna Singh">
+                            <div class="counselor-details">
+                                <h4>DR. ANNA SINGH</h4>
+                                <p>Anxiety & Stress</p>
+                            </div>
+                        </div>
+                        <button class="view-profile-btn">VIEW PROFILE</button>
+                    </div>
+                     <div class="counselor-card" data-counselor-id="2" data-counselor-name="Resource Videos">
+                        <div class="counselor-info">
+                            <img src="doctor2.jpg" alt="Resource Videos">
+                             <div class="counselor-details">
+                                <h4>EXPLORE VIDEOS</h4>
+                                <p>MUSE YOUR CONNECT WITH WELL-BEING.</p>
+                            </div>
+                        </div>
+                        <button class="view-profile-btn">VIEW PROFILE</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-column" id="date-time-column">
+                <h3>2. CHOOSE DATE & TIME</h3>
+                <div class="date-time-picker">
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button id="prev-month">&lt;</button>
+                            <span id="month-year">NOV 2024</span>
+                            <button id="next-month">&gt;</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-days">
+                            </div>
+                    </div>
+                    <div class="time-slots" id="time-slots-container">
+                        </div>
+                </div>
+            </div>
+            
+            <div class="booking-column" id="confirm-column">
+                <h3>3. CONFIRM DETAILS</h3>
+                <div id="confirmation-details">
+                    <p class="placeholder">Please select a counselor, date, and time.</p>
+                </div>
+                <button class="book-btn" id="book-appointment-btn" disabled>BOOK APPOINTMENT</button>
+            </div>
+        </main>
+
+        <nav>
+            <button class="nav-arrow left">&lt;</button>
+            <button class="nav-arrow right">&gt;</button>
+        </nav>
+    </div>
+
+    <script src="appointment.js"></script>
+</body>
+</html>
